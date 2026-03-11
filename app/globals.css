@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffc4;
+}
+
+.grid-bg {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.light-grid-bg {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(8px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-up.active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.post-card {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.post-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: #00ffc4;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.post-card:hover::before {
+  width: 100%;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.12);
+}
+
+.featured-card {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -12px rgba(0, 255, 196, 0.08);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.07) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.skeleton-light {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04) 25%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.04) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.cat-systems {
+  color: #05403e;
+  background: rgba(5, 64, 62, 0.08);
+  border-color: rgba(5, 64, 62, 0.2);
+}
+
+.cat-brand {
+  color: #1a1a2e;
+  background: rgba(26, 26, 46, 0.06);
+  border-color: rgba(26, 26, 46, 0.15);
+}
+
+.cat-ai {
+  color: #05403e;
+  background: rgba(0, 255, 196, 0.08);
+  border-color: rgba(0, 255, 196, 0.2);
+}
+
+.cat-strategy {
+  color: #3d2b1f;
+  background: rgba(61, 43, 31, 0.06);
+  border-color: rgba(61, 43, 31, 0.15);
+}
+
+.preview-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #0a0a0a;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.preview-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #0a0a0a;
+  margin-top: 2rem;
+  margin-bottom: 0.7rem;
+}
+
+.preview-content p {
+  font-family: Inter, sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 300;
+  color: rgba(10, 10, 10, 0.75);
+  line-height: 1.85;
+  margin-bottom: 1.1rem;
+}
+
+.preview-content ul {
+  margin-bottom: 1rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.preview-content ul li {
+  font-size: 1.0625rem;
+  font-weight: 300;
+  color: rgba(10, 10, 10, 0.75);
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.3rem;
+  line-height: 1.7;
+}
+
+.preview-content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00ffc4;
+}
+
+.preview-content ol {
+  list-style: none;
+  counter-reset: step;
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+.preview-content ol li {
+  position: relative;
+  counter-increment: step;
+  padding-left: 2.1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 300;
+  color: rgba(10, 10, 10, 0.75);
+}
+
+.preview-content ol li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: rgba(5, 64, 62, 0.1);
+  color: #00ffc4;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-content blockquote {
+  border-left: 3px solid #00ffc4;
+  padding: 0.6rem 1rem;
+  margin: 1.25rem 0;
+  background: rgba(0, 255, 196, 0.04);
+  border-radius: 0 6px 6px 0;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #0a0a0a;
+}
+
+.preview-content strong {
+  font-weight: 600;
+  color: #0a0a0a;
+}

@@ -1,0 +1,590 @@
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    platinum: '#F2F5F5',
+                    charcoal: '#0A0A0A',
+                    teal: '#00FFC4',
+                    darkGreen: '#05403E',
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    serif: ['"Playfair Display"', 'serif'],
+                    mono: ['JetBrains Mono', 'monospace'],
+                },
+            }
+        }
+    }
+</script>
+<style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0A0A0A; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00FFC4; }
+
+    .grid-bg {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    }
+    .light-grid-bg {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+    }
+
+    .reveal-up {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(8px);
+        transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                    transform 0.9s cubic-bezier(0.16,1,0.3,1),
+                    filter 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal-up.active { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+    /* Post card accent line */
+    .post-card {
+        position: relative;
+        transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .post-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 0; height: 3px;
+        background: #00FFC4;
+        transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+        z-index: 10;
+    }
+    .post-card:hover::before { width: 100%; }
+    .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 24px 48px -12px rgba(0,0,0,0.12);
+    }
+
+    /* Featured card glow */
+    .featured-card {
+        position: relative;
+        transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .featured-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 30px 60px -12px rgba(0,255,196,0.08);
+    }
+
+    /* Skeleton shimmer */
+    @keyframes shimmer {
+        0% { background-position: -400px 0; }
+        100% { background-position: 400px 0; }
+    }
+    .skeleton {
+        background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 75%);
+        background-size: 400px 100%;
+        animation: shimmer 2s infinite;
+    }
+    .skeleton-light {
+        background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
+        background-size: 400px 100%;
+        animation: shimmer 2s infinite;
+    }
+
+    /* Category tag colors */
+    .cat-systems { color: #05403E; background: rgba(5,64,62,0.08); border-color: rgba(5,64,62,0.2); }
+    .cat-brand { color: #1a1a2e; background: rgba(26,26,46,0.06); border-color: rgba(26,26,46,0.15); }
+    .cat-ai { color: #05403E; background: rgba(0,255,196,0.08); border-color: rgba(0,255,196,0.2); }
+    .cat-strategy { color: #3d2b1f; background: rgba(61,43,31,0.06); border-color: rgba(61,43,31,0.15); }
+</style>
+
+<div id="qwp-insights-page" class="font-sans text-platinum antialiased selection:bg-teal selection:text-charcoal bg-charcoal overflow-x-hidden">
+
+    <!-- ============================================================ -->
+    <!-- NAV -->
+    <!-- ============================================================ -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-charcoal/90 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <a href="/" class="font-serif text-3xl md:text-4xl font-black tracking-tighter text-platinum hover:opacity-80 transition-opacity">
+                    QWP<span class="text-teal">.</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8 lg:space-x-12">
+                    <a href="/approach" class="text-[10px] font-bold text-platinum/70 hover:text-teal transition-colors uppercase tracking-[0.3em]">Approach</a>
+                    <a href="/capabilities" class="text-[10px] font-bold text-platinum/70 hover:text-teal transition-colors uppercase tracking-[0.3em]">Capabilities</a>
+                    <a href="/results" class="text-[10px] font-bold text-platinum/70 hover:text-teal transition-colors uppercase tracking-[0.3em]">Results</a>
+                    <a href="https://insights.quietwealthpartners.com" class="text-[10px] font-bold text-teal uppercase tracking-[0.3em]">Insights</a>
+                    <a href="https://diagnostic.quietwealthpartners.com" class="border border-teal bg-transparent text-platinum px-6 py-3 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-teal hover:text-charcoal transition-all duration-300">
+                        Assess Revenue Flow
+                    </a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-platinum hover:text-teal focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-charcoal border-b border-white/5">
+            <div class="px-6 pt-4 pb-8 space-y-6 flex flex-col">
+                <a href="/approach" class="text-sm font-bold text-platinum hover:text-teal uppercase tracking-[0.3em]">Approach</a>
+                <a href="/capabilities" class="text-sm font-bold text-platinum hover:text-teal uppercase tracking-[0.3em]">Capabilities</a>
+                <a href="/results" class="text-sm font-bold text-platinum hover:text-teal uppercase tracking-[0.3em]">Results</a>
+                <a href="https://insights.quietwealthpartners.com" class="text-sm font-bold text-teal uppercase tracking-[0.3em]">Insights</a>
+                <a href="https://diagnostic.quietwealthpartners.com" class="w-full text-center px-6 py-4 bg-teal text-charcoal font-bold text-[10px] uppercase tracking-[0.2em] mt-4 block">
+                    Assess Revenue Flow
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- HERO -->
+    <!-- ============================================================ -->
+    <section class="relative pt-48 pb-24 bg-charcoal overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+
+        <!-- Subtle side glow -->
+        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none" style="background: radial-gradient(ellipse at left center, rgba(0,255,196,0.07) 0%, transparent 70%);"></div>
+        <div class="absolute right-0 top-1/3 w-[400px] h-[400px] pointer-events-none" style="background: radial-gradient(ellipse at right center, rgba(5,64,62,0.18) 0%, transparent 65%);"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="max-w-4xl reveal-up">
+                <div class="flex items-center gap-6 mb-8">
+                    <div class="h-px w-12 bg-teal"></div>
+                    <span class="font-mono text-[10px] tracking-[0.4em] font-bold uppercase text-teal/70">Insights</span>
+                </div>
+                <h1 class="font-serif text-6xl md:text-7xl lg:text-8xl font-medium leading-[1.0] tracking-tight mb-8">
+                    <span class="text-platinum">The quiet intelligence</span><br/>
+                    <span class="italic text-transparent bg-clip-text bg-gradient-to-r from-teal via-platinum to-platinum/60">behind loud results.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-platinum/50 font-light leading-relaxed max-w-2xl">
+                    Fortune 500 thinking for Main Street businesses. The frameworks, systems, and strategy behind how we design invisible revenue infrastructure — written down.
+                </p>
+            </div>
+
+            <!-- Category filter pills — aligned to 6 capabilities -->
+            <div class="mt-12 flex flex-wrap gap-3 reveal-up" style="transition-delay:100ms;">
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-teal bg-teal/10 text-teal transition-all">All</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">Brand & Identity</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">Revenue-Ready Websites</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">Social & Acquisition</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">Funnels & Client Journey</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">Delivery Architecture</button>
+                <button class="font-mono text-[9px] uppercase tracking-widest px-4 py-2 rounded border border-white/10 text-platinum/50 hover:border-teal/40 hover:text-platinum transition-all">AI & Custom Tech</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FEATURED POST -->
+    <!-- ============================================================ -->
+    <section class="bg-charcoal pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <a href="#" class="featured-card block bg-[#111] border border-white/10 rounded-2xl overflow-hidden hover:border-teal/30 transition-colors duration-500 reveal-up">
+                <div class="absolute top-0 left-0 w-full h-0.5 bg-teal opacity-60"></div>
+                <div class="grid lg:grid-cols-2">
+                    <!-- Image side -->
+                    <div class="relative h-64 lg:h-auto min-h-[320px] bg-darkGreen/20 overflow-hidden">
+                        <div class="absolute inset-0 grid-bg opacity-30"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <!-- Placeholder visual for featured post -->
+                            <div class="text-center p-10">
+                                <div class="w-20 h-20 rounded-2xl bg-teal/10 border border-teal/30 flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-network-wired text-teal text-2xl"></i>
+                                </div>
+                                <div class="font-mono text-[9px] text-teal/50 uppercase tracking-widest">Featured Post</div>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-3 py-1.5 bg-teal text-charcoal font-bold rounded">Featured</span>
+                        </div>
+                    </div>
+                    <!-- Content side -->
+                    <div class="p-10 md:p-14 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-systems">Revenue Systems</span>
+                                <span class="font-mono text-[9px] text-platinum/30">·</span>
+                                <span class="font-mono text-[9px] text-platinum/40">March 4, 2026</span>
+                                <span class="font-mono text-[9px] text-platinum/30">·</span>
+                                <span class="font-mono text-[9px] text-platinum/40">8 min read</span>
+                            </div>
+                            <h2 class="font-serif text-3xl md:text-4xl text-platinum font-normal leading-tight mb-5">
+                                Why Most $1M Businesses Are Still Operating Like Startups — And What Fortune 500 Infrastructure Actually Looks Like
+                            </h2>
+                            <p class="text-platinum/50 font-light leading-relaxed text-base mb-8">
+                                There's a gap between what enterprise companies take for granted and what most established service businesses have access to. We built QWP to close that gap. Here's what the infrastructure actually looks like — and why it changes everything.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-6 border-t border-white/8">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center">
+                                    <span class="font-serif text-teal text-xs font-bold">K</span>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-[10px] uppercase tracking-widest text-platinum">Kendra Lewis</div>
+                                    <div class="font-mono text-[9px] text-platinum/40">Managing Partner, QWP</div>
+                                </div>
+                            </div>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read Article →</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- POST GRID -->
+    <!-- ============================================================ -->
+    <section class="py-20 bg-platinum relative z-20">
+        <div class="absolute inset-0 light-grid-bg pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+
+            <div class="flex items-center justify-between mb-12 reveal-up">
+                <div class="flex items-center gap-6">
+                    <div class="h-px w-12 bg-teal"></div>
+                    <span class="font-mono text-[10px] tracking-[0.4em] font-bold uppercase text-darkGreen">Latest</span>
+                </div>
+                <span class="font-mono text-[9px] text-charcoal/30 uppercase tracking-widest">6 Articles</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Post Card 1 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:50ms;">
+                    <div class="h-48 bg-darkGreen/10 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-darkGreen/20 border border-darkGreen/20 flex items-center justify-center">
+                                <i class="fa-solid fa-brain text-darkGreen text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-ai">AI & Custom Tech</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">5 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            The AI Employee Playbook: What to Automate First in a Service Business
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            Not every task should be automated. Here's the framework we use to decide what an AI employee handles — and what needs a human touch.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Feb 18, 2026</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Post Card 2 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:100ms;">
+                    <div class="h-48 bg-charcoal/5 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-charcoal/10 border border-charcoal/10 flex items-center justify-center">
+                                <i class="fa-solid fa-paintbrush text-charcoal/40 text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-brand">Brand & Identity</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">6 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            Your Brand Is a Trust Signal. Here's How to Make It Work Before You Say a Word.
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            Premium clients make decisions in seconds. Your brand either passes or fails that test before you ever get on a call. Here's how to make sure it passes.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Feb 10, 2026</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Post Card 3 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:150ms;">
+                    <div class="h-48 bg-teal/5 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-teal/10 border border-teal/20 flex items-center justify-center">
+                                <i class="fa-solid fa-filter text-darkGreen text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-systems">Revenue Systems</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">7 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            The Six Revenue Streams Every Service Business Should Have Running Simultaneously
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            Most businesses rely on one or two revenue streams and wonder why growth feels fragile. Here's the complete architecture.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Jan 29, 2026</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Post Card 4 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:200ms;">
+                    <div class="h-48 bg-darkGreen/8 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-darkGreen/15 border border-darkGreen/15 flex items-center justify-center">
+                                <i class="fa-solid fa-chart-line text-darkGreen text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-strategy">Delivery Architecture</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">9 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            When to Stop Scaling Marketing and Start Scaling Infrastructure
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            More leads won't fix a broken delivery system. At some point, the bottleneck isn't acquisition — it's everything that happens after.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Jan 15, 2026</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Post Card 5 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:250ms;">
+                    <div class="h-48 bg-charcoal/4 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-charcoal/8 border border-charcoal/8 flex items-center justify-center">
+                                <i class="fa-solid fa-gears text-charcoal/30 text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-systems">Revenue Systems</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">5 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            CRM Isn't a Tool. It's a Philosophy. Here's the Difference.
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            Most businesses set up a CRM and never actually use it the way it was intended. The problem isn't the software — it's the mindset going in.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Jan 6, 2026</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Post Card 6 -->
+                <a href="#" class="post-card reveal-up bg-white border border-black/8 rounded-2xl overflow-hidden flex flex-col" style="transition-delay:300ms;">
+                    <div class="h-48 bg-teal/4 relative overflow-hidden">
+                        <div class="absolute inset-0 light-grid-bg opacity-60"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-xl bg-teal/8 border border-teal/15 flex items-center justify-center">
+                                <i class="fa-solid fa-bolt text-teal/60 text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-7 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded border cat-ai">AI & Custom Tech</span>
+                            <span class="font-mono text-[9px] text-charcoal/30">6 min</span>
+                        </div>
+                        <h3 class="font-serif text-xl text-charcoal font-normal leading-snug mb-3 flex-1">
+                            Voice Agents Are Not the Future. They're the Present. Here's What to Do About It.
+                        </h3>
+                        <p class="text-charcoal/50 text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                            The businesses that deploy AI voice agents in the next 12 months will have a structural advantage that's very hard to close. Here's the honest breakdown.
+                        </p>
+                        <div class="flex items-center justify-between pt-5 border-t border-black/6 mt-auto">
+                            <span class="font-mono text-[9px] text-charcoal/30">Dec 20, 2025</span>
+                            <span class="font-mono text-[10px] text-teal font-bold uppercase tracking-widest">Read →</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Load more -->
+            <div class="text-center mt-14 reveal-up">
+                <button class="border border-charcoal/20 text-charcoal px-10 py-4 font-mono text-[10px] uppercase tracking-widest hover:border-teal hover:text-darkGreen transition-all duration-300">
+                    Load More Articles
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- NEWSLETTER CTA -->
+    <!-- ============================================================ -->
+    <section class="py-24 bg-charcoal relative z-20 overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
+        <div class="absolute right-0 bottom-0 w-96 h-96 bg-darkGreen rounded-full mix-blend-screen filter blur-[160px] opacity-20 pointer-events-none"></div>
+        <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal-up">
+            <div class="flex items-center justify-center gap-6 mb-8">
+                <div class="h-px w-12 bg-teal"></div>
+                <span class="font-mono text-[10px] tracking-[0.4em] font-bold uppercase text-teal/70">Stay Sharp</span>
+                <div class="h-px w-12 bg-teal"></div>
+            </div>
+            <h2 class="font-serif text-4xl md:text-5xl font-normal text-platinum mb-5 leading-tight">
+                Get the insights<br/>
+                <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-teal to-platinum">before everyone else does.</span>
+            </h2>
+            <p class="text-platinum/50 font-light text-lg leading-loose mb-10 max-w-xl mx-auto">
+                Revenue architecture thinking, delivered monthly. No noise. Just the frameworks and intelligence that actually move businesses forward.
+            </p>
+            <div id="newsletter-container" class="relative max-w-md mx-auto">
+                <form id="newsletter-form" class="flex items-center transition-opacity duration-500">
+                    <input type="email" id="newsletter-email" placeholder="Your email address" class="bg-white/5 border border-white/10 text-platinum text-sm px-5 py-4 w-full focus:outline-none focus:border-teal/50 transition-colors placeholder:text-platinum/30" required>
+                    <button type="submit" id="newsletter-submit" class="bg-teal text-charcoal px-6 py-4 font-bold text-[10px] uppercase tracking-widest hover:bg-platinum transition-colors whitespace-nowrap relative min-w-[120px]">
+                        <span id="btn-text">Subscribe</span>
+                        <i id="btn-spin" class="fa-solid fa-circle-notch animate-spin absolute inset-0 m-auto opacity-0 text-sm transition-opacity"></i>
+                    </button>
+                </form>
+                <div id="newsletter-success" class="absolute inset-0 flex items-center justify-center gap-3 opacity-0 pointer-events-none translate-y-2 transition-all duration-500">
+                    <div class="w-8 h-8 rounded-full bg-teal/10 border border-teal/20 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-check text-teal text-xs"></i>
+                    </div>
+                    <p class="text-sm text-platinum font-medium">You're in. Talk soon.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================================ -->
+    <footer class="bg-[#050505] text-platinum/70 pt-20 pb-10 border-t border-white/5 relative z-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+                <div class="lg:col-span-4 space-y-4">
+                    <a href="/" class="font-serif text-3xl md:text-4xl font-black tracking-tighter text-platinum block mb-6 hover:opacity-80 transition-opacity">
+                        QWP<span class="text-teal">.</span>
+                    </a>
+                    <p class="text-sm font-light leading-relaxed text-platinum/60 max-w-xs">Fortune 500 Infrastructure for Main Street Legends.</p>
+                </div>
+                <div class="lg:col-span-2 text-sm">
+                    <h4 class="text-platinum font-bold uppercase tracking-[0.2em] text-[10px] mb-6">Explore</h4>
+                    <ul class="space-y-4 font-light text-platinum/60">
+                        <li><a href="/approach" class="hover:text-teal transition-colors">Approach</a></li>
+                        <li><a href="/capabilities" class="hover:text-teal transition-colors">Capabilities</a></li>
+                        <li><a href="/results" class="hover:text-teal transition-colors">Results</a></li>
+                        <li><a href="https://insights.quietwealthpartners.com" class="hover:text-teal transition-colors">Insights</a></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2 text-sm">
+                    <h4 class="text-platinum font-bold uppercase tracking-[0.2em] text-[10px] mb-6">Legal</h4>
+                    <ul class="space-y-4 font-light text-platinum/60">
+                        <li><a href="https://quietwealthpartners.com/privacy" class="hover:text-teal transition-colors">Privacy Policy</a></li>
+                        <li><a href="https://quietwealthpartners.com/terms" class="hover:text-teal transition-colors">Terms & Conditions</a></li>
+                        <li><a href="https://quietwealthpartners.com/disclaimer" class="hover:text-teal transition-colors">Disclaimer</a></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-4">
+                    <h4 class="text-platinum font-bold uppercase tracking-[0.2em] text-[10px] mb-6">Newsletter</h4>
+                    <p class="text-sm font-light text-platinum/60 mb-5">System architecture insights, delivered monthly.</p>
+                    <div class="flex items-center">
+                        <input type="email" placeholder="Enter your email" class="bg-charcoal border border-white/10 text-platinum text-sm px-5 py-3.5 w-full focus:outline-none focus:border-teal/50 transition-colors">
+                        <button class="bg-teal text-charcoal px-5 py-3.5 hover:bg-platinum transition-colors">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-platinum/40">
+                <div class="flex flex-col items-center md:items-start gap-1">
+                    <p>&copy; 2026 Quiet Wealth Partners. All rights reserved.</p>
+                    <p>3343 Peachtree Rd NE, Suite 145 PMB 1388, Atlanta, GA 30326, USA</p>
+                    <a href="tel:4702989563" class="hover:text-teal transition-colors">470-298-9563</a>
+                </div>
+                <div class="flex gap-6">
+                    <a href="https://www.facebook.com/quietwealthpartners/" target="_blank" rel="noopener noreferrer" class="hover:text-teal transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <a href="https://www.instagram.com/quietwealthpartners" target="_blank" rel="noopener noreferrer" class="hover:text-teal transition-colors"><i class="fa-brands fa-instagram text-sm"></i></a>
+                    <a href="https://www.linkedin.com/company/quiet-wealth-partners" target="_blank" rel="noopener noreferrer" class="hover:text-teal transition-colors"><i class="fa-brands fa-linkedin-in text-sm"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- JS -->
+    <!-- ============================================================ -->
+    <script>
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        window.scrollTo(0, 0);
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('shadow-lg', window.scrollY > 20);
+        });
+
+        const revealObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.01, rootMargin: '0px 0px -10px 0px' });
+        document.querySelectorAll('.reveal-up').forEach(el => revealObserver.observe(el));
+
+        // Category filter
+        document.querySelectorAll('.flex.flex-wrap.gap-3 button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.flex.flex-wrap.gap-3 button').forEach(b => {
+                    b.classList.remove('border-teal', 'bg-teal/10', 'text-teal');
+                    b.classList.add('border-white/10', 'text-platinum/50');
+                });
+                btn.classList.add('border-teal', 'bg-teal/10', 'text-teal');
+                btn.classList.remove('border-white/10', 'text-platinum/50');
+            });
+        });
+
+        // Newsletter
+        document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsletter-email').value.trim();
+            if (!email) return;
+            document.getElementById('newsletter-submit').disabled = true;
+            document.getElementById('btn-text').classList.add('opacity-0');
+            document.getElementById('btn-spin').classList.remove('opacity-0');
+            try {
+                await fetch('https://qwp-newsletter-sync.square-bush-83cc.workers.dev/', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                document.getElementById('newsletter-form').classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    document.getElementById('newsletter-success').classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+                }, 300);
+            } catch {
+                document.getElementById('newsletter-submit').disabled = false;
+                document.getElementById('btn-spin').classList.add('opacity-0');
+                document.getElementById('btn-text').classList.remove('opacity-0');
+            }
+        });
+    </script>
+</div>
